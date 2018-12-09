@@ -11,8 +11,8 @@ try:
 	import Crypto.Random.random
 	secure_random = Crypto.Random.random.getrandbits
 except ImportError:
-	import OpenSSL
-	secure_random = lambda x: long(hexlify(OpenSSL.rand.bytes(x>>3)), 16)
+	import os
+	secure_random = lambda x: long(hexlify(os.urandom(x>>3)), 16)
 
 
 class DiffieHellman(object):
