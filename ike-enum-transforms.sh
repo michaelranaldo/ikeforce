@@ -1,0 +1,30 @@
+#!/bin/bash
+if [ -z "$1" ]
+then
+	echo "Please provide an IP address"
+	exit 1
+else
+	IP_ADDRESS=$1
+fi
+ENCRYPTION_ALGOS=( "1" "5" "7/128" "7/256" )
+INTEGRITY_ALGOS=( "1" "2" "4" "5" "6" )
+AUTH_METHODS=( "1" "3" "65001" )
+DIFFIE_HELLMAN_GROUPS=( "1" "2" "5" "14" "15" )
+RED="\033[01;31m"
+GREEN="\033[01;32m"
+BLUE="\033[01;34m"
+RESET_COLOUR="\033[00m"
+for ENCRYPTION_ALGO in ${ENCRYPTION_ALGOS[@]}
+do
+	for INTEGRITY_ALGO in ${INTEGRITY_ALGOS[@]}
+	do
+		for AUTH_METHOD in ${AUTH_METHODS[@]}
+		do
+			for DIFFIE_HELLMAN_GROUP in ${DIFFIE_HELLMAN_GROUPS[@]}
+			do
+				echo -e "$BLUE[+]$RESET_COLOUR Testing $ENCRYPTION_ALGO, $INTEGRITY_ALGO, $AUTH_METHOD, $DIFFIE_HELLMAN_GROUP"
+				ike-scan -M -a $ENCRYPTION_ALGO,$INTEGRIY_ALGO,$AUTH_METHOD,$DIFFIE_HELLMAN_GROUP -o $IP_ADDRESS | tee ike-scan-$ENCRYPTION_ALGO-$INTEGRITY_ALGO-$AUTH_METHOD-$DIFFIE_HELLMAN_GROUP-$IP_ADDRESS.txt
+			done
+		done
+	done
+done
